@@ -113,11 +113,15 @@ public class EnemyAI : MonoBehaviour
 
         foreach(BaseAction baseAction in enemyUnit.GetBaseActionArray())
         {
+            //持っているアクションポイントで実行可能かどうかを判定する
+            //実行可能な場合、処理を通す
             if (!enemyUnit.CanSpendActionPointsToTakeAction(baseAction))
             {
                 continue;
             }
 
+            //一番良いアクションが無かった場合、
+            //手持ちのアクションから最も良いものはどれかを取得する
             if(bestEnemyAIAction == null)
             {
                 bestEnemyAIAction = baseAction.GetBestEnemyAIAction();
@@ -125,6 +129,7 @@ public class EnemyAI : MonoBehaviour
             }
             else
             {
+                //それぞれのアクションのコストを比較し、行うアクションがどれかを決定する
                 EnemyAIAction testEnemyAIAction = baseAction.GetBestEnemyAIAction();
                 if(testEnemyAIAction != null && testEnemyAIAction.actionValue > bestEnemyAIAction.actionValue)
                 {
@@ -134,6 +139,7 @@ public class EnemyAI : MonoBehaviour
             }
         }
 
+        //アクションポイントを消費してアクションを実行可能であれば、アクションを行う
         if (bestEnemyAIAction != null && enemyUnit.TrySpendActionPointsToTakeAction(bestBaseAction))
         {
             bestBaseAction.TakeAction(bestEnemyAIAction.gridPosition, onEnemyAIActionComplete);
